@@ -1,0 +1,170 @@
+---
+title: "flat for sf layers-building functions"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- Run this 'development' chunk -->
+<!-- Store every call to library() that you need to explore your functions -->
+
+```{r development, include=FALSE}
+library(testthat)
+library(tidyverse)
+library(osmdata) 
+library(sf) 
+library(leaflet)
+```
+
+
+```{r development-load}
+library(glosmurb)
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Keep eval=FALSE to avoid infinite loop in case you hit the knit button
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_full_2.Rmd", vignette_name = "Form layers")
+```
+
+  
+# base_map: Build basic map based on study area (shape)
+    
+```{r function-base_map}
+#' Builds basic leaflet map based on study area (shape)
+#' @param shape the study area which should be displayed by the map
+#' @return a leaflet map
+#' @export
+base_map <- function(shape_name){
+  if(is.character(shape_name)){
+    shape=get(shape_name)
+  }else{
+    shape=shape_name
+    shape_name=as.character(substitute(shape_name))
+  }
+  map=leaflet::leaflet(shape) %>% 
+      leaflet::addTiles(group = "OSM map") %>% 
+      leaflet::addPolygons(data=shape,col="red")
+  return(map)
+}
+```
+  
+```{r example-base_map, fig.width=12}
+data(confluence)
+base_map("confluence")
+```
+  
+```{r tests-base_map}
+test_that("base_map works", {
+  expect_true(inherits(base_map, "function")) 
+})
+```
+    
+# detail_element: create an html descriptor of items
+
+    
+```{r function-detail_element}
+#' Creates an html column detailing information regarding OSM items
+#' @param gosmdata the gosmdata element you wish to detail
+#' @return gosmdata with additional detail column
+#' 
+#' @export
+detail_element <- function(gosmdata){
+  if(is.null(gosmdata)){return(NULL)}
+  flink=function(wikidata){
+    wikidata_root="https://www.wikidata.org/wiki/"
+    if(!is.na(wikidata)){
+        wikidata_link=glue::glue("<p><a href='{wikidata_root}{wikidata}' target='_blank'>Wikidata</a></p>")}else{
+        wikidata_link=""
+        }
+  return(wikidata_link)
+  }
+  gosmdata=gosmdata %>% 
+    dplyr::mutate(detail="")
+  if("name" %in% names(gosmdata)){
+      gosmdata=gosmdata %>% 
+        dplyr::mutate(detail=dplyr::case_when(is.na(name)~detail,
+                                              !is.na(name)~glue::glue("{detail}<h2>{name}</h2>"))) 
+  }
+  if("wikidata" %in% names(gosmdata)){
+    wikidata_link=purrr::map_chr(gosmdata$wikidata, flink)
+      gosmdata=gosmdata %>% 
+        dplyr::mutate(detail=glue::glue("{detail}{wikidata_link}")) 
+  }
+  gosmdata=gosmdata %>% 
+    dplyr::mutate(detail=dplyr::case_when(detail==""~NA_character_,
+                                          detail!=""~glue::glue("<html>{detail}</html>")))
+                
+  return(gosmdata)
+    
+}
+```
+  
+```{r example-detail_element}
+g_parks=get_osmdata("leisure","park","confluence") %>% 
+  pick_osmdata(geom="osm_polygons") %>% 
+  detail_element()
+g_parks
+```
+  
+```{r tests-detail_element}
+test_that("detail_element works", {
+  expect_true(inherits(detail_element, "function")) 
+})
+```
+  
+
+# add_to_map: Add elements to your map
+    
+```{r function-add_to_map}
+#' Add a layer to your map, regarding a particular type of OSM key-value-geometry object.
+#' @param basemap the basemap which you wish to add elements to
+#' @param gosmdata the gosmdata element you wish to add to the map, as returned by pick_osmdata()
+#' @param layergroup in which layer grouping elements should this gosmdata element be displayed (defaults to "additional")
+#' @param color color of the data items
+#' @return a leaflet map
+#' @export
+add_to_map <- function(basemap, gosmdata, layergroup="additional",color="red"){
+  if(is.null(gosmdata)){
+    return(basemap)
+  }
+  geom=gosmdata %>% sf::st_geometry_type() %>% unique() %>% .[1]
+  if(geom=="POINT"){addShape=leaflet::addCircles}
+  if(geom %in% c("POLYGON","MULTIPOLYGON")){addShape=leaflet::addPolygons}
+  if(geom %in% c("LINESTRING","MULTILINESTRING")){addShape=leaflet::addPolylines}
+  map=basemap %>% 
+    addShape(data=gosmdata,
+             group=layergroup,
+             color=color,
+             popup=~detail
+             )
+}
+```
+  
+```{r example-add_to_map}
+g_bridges=get_osmdata("man_made","bridge","confluence") %>% 
+  pick_osmdata(geom="osm_polygons") %>% 
+  detail_element()
+g_parks=get_osmdata("leisure","park","confluence") %>% 
+  pick_osmdata(geom="osm_polygons") %>% 
+  detail_element()
+map=base_map("confluence") %>% 
+  add_to_map(g_bridges) %>% 
+  add_to_map(g_parks, color="green")
+map
+
+g_vineyard=get_osmdata("landuse","vineyard","condrieu") %>% 
+  pick_osmdata(geom="osm_polygons") %>% 
+  detail_element()
+map=base_map("condrieu") %>% 
+  add_to_map(g_vineyard, color="purple")
+
+```
+  
+```{r tests-add_to_map}
+test_that("add_to_map works", {
+  expect_true(inherits(add_to_map, "function")) 
+})
+```
+  

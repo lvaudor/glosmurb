@@ -1,0 +1,47 @@
+key,value,group,geom,color,priority
+landuse,farmland,food production,osm_polygons,#f9e79f,1
+landuse,meadow,food production,osm_polygons,#f9ebea,1
+landuse,allotments,food production,osm_polygons,#cd6155,1
+landuse,orchard,food production,osm_polygons,#d7bde2,1
+landuse,plant_nursery,food production,osm_polygons,#f5b7b1,1
+landuse,vineyard,food production,osm_polygons,#9b59b6,1
+landuse,aquaculture,food production,osm_polygons,#5d6d7e,1
+man_made,groyne,engineering,osm_lines,#fbfcfc,1
+man_made,dyke,engineering,osm_lines,#808b96,1
+waterway,dam,engineering,osm_lines,#566573,1
+man_made,embankment,engineering,osm_lines,#abb2b9,1
+seamark:type,gate,engineering,osm_points,#e74c3c,1
+man_made,bridge,engineering,osm_polygons,#cb4335,1
+man_made,wastewater_plant,engineering,osm_polygons,#9a7d0a,1
+landuse,quarry,engineering,osm_polygons,#a04000,1
+landuse,port,engineering,osm_polygons,#95a5a6,1
+landuse,basin,engineering,osm_polygons,#2874a6,1
+power,plant,engineering,osm_polygons,#FF0000,1
+amenity,drinking_water,equipment,osm_points,#3498db,1
+amenity,bench,equipment,osm_points,#4a235a,1
+amenity,waste_basket,equipment,osm_points,#154360,1
+leisure,picnic_table,equipment,osm_points,#0e6251,1
+tourism,viewpoint,equipment,osm_points,#6e2c00,1
+leisure,swimming_area,entertainment,osm_polygons,#aed6f1,1
+leisure,dog_park,entertainment,osm_polygons,#9c640c,1
+leisure,fishing,entertainment,osm_polygons,#1f618d,1
+leisure,playground,entertainment,osm_polygons,#f8c471,1
+leisure,beach_resort,entertainment,osm_polygons,#f7dc6f,1
+leisure,resort,entertainment,osm_polygons,#d4ac0d,1
+landuse,recreation_ground,entertainment,osm_polygons,#f39c12,1
+natural,tree,nature,osm_points,#239b56,2
+leisure,park,nature,osm_polygons,#abebc6,1
+leisure,garden,nature,osm_polygons,#2ecc71,1
+leisure,nature_reserve,nature,osm_polygons,#1d8348,1
+natural,beach,nature,osm_polygons,#fcf3cf,1
+natural,wood,nature,osm_polygons,#186a3b,1
+natural,grassland,nature,osm_polygons,#bef5af,1
+natural,sand,nature,osm_polygons,#f5edc5,1
+natural,wetland,nature,osm_polygons,#45ffe3,1
+landuse,forest,nature,osm_polygons,#196f3d,1
+landuse,grass,nature,osm_polygons,#2ecc71,1
+landuse,greenfield,nature,osm_polygons,#82e0aa,1
+natural,scrub,nature,osm_polygons,#cec127,1
+highway,path,mobility,osm_lines,#cb4335,2
+highway,cycleway,mobility,osm_lines,#ec7063,2
+highway,footway,mobility,osm_lines,#f5b7b1,2

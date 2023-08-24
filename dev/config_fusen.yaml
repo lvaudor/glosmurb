@@ -1,0 +1,45 @@
+flat_1.Rmd:
+  path: dev/flat_1.Rmd
+  state: active
+  R:
+  - R/get_osmdata.R
+  - R/pick_osmdata.R
+  - R/include-some-data-examples-in-your-package.R
+  tests:
+  - tests/testthat/test-get_osmdata.R
+  - tests/testthat/test-pick_osmdata.R
+  vignettes: vignettes/get-started.Rmd
+  inflate:
+    flat_file: dev/flat_1.Rmd
+    vignette_name: Get started
+    open_vignette: true
+    check: true
+    document: true
+    overwrite: ask
+flat_2.Rmd:
+  path: dev/flat_2.Rmd
+  state: active
+  R:
+  - R/add_to_map.R
+  - R/base_map.R
+  - R/detail_element.R
+  tests:
+  - tests/testthat/test-base_map.R
+  - tests/testthat/test-detail_element.R
+  - tests/testthat/test-add_to_map.R
+  vignettes: vignettes/form-layers.Rmd
+  inflate:
+    flat_file: dev/flat_2.Rmd
+    vignette_name: Form layers
+    open_vignette: true
+    check: true
+    document: true
+    overwrite: ask
+keep:
+  path: keep
+  state: active
+  R:
+  - R/clear_osmdata.R
+  - R/utils-pipe.R
+  tests: tests/testthat/test-clear_osmdata.R
+  vignettes: []
