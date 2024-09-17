@@ -43,6 +43,8 @@ landuse,grass,nature,osm_polygons,#2ecc71,1
 landuse,greenfield,nature,osm_polygons,#82e0aa,1
 natural,scrub,nature,osm_polygons,#cec127,1
 natural,water,nature,osm_polygons,#4141ff,1
+waterway,river,nature,osm_lines,#4141ff,1
+waterway,stream,nature,osm_lines,#4141ff,1
 highway,path,mobility,osm_lines,#cb4335,2
 highway,cycleway,mobility,osm_lines,#ec7063,2
 highway,footway,mobility,osm_lines,#f5b7b1,2

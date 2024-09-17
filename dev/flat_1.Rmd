@@ -69,10 +69,11 @@ Based on a key-value (as listed [here](https://wiki.openstreetmap.org/wiki/Map_f
 #' @param dir_name the directory under which returned data is saved. Defaults to "data/osmdata".
 #' @param return whether the object should be returned (could be FALSE when save is TRUE)
 #' @return a list with elements key, value, shape_name and result which is an osmdata_sf object
+#' @param pause the number of seconds to pause (useful when querying in batches). Defaults to 0.
 #' @export
 #'
 #' @examples
-get_osmdata=function(key, value, shape_name,return=TRUE, save=FALSE, dir_name="data/osmdata"){
+get_osmdata=function(key, value, shape_name,return=TRUE, save=FALSE, dir_name="data/osmdata", pause=0){
   osmdata_file=glue::glue("{dir_name}/{shape_name}/{key}-{value}.RDS")
   if(file.exists(osmdata_file)){
       if(return){
@@ -90,6 +91,7 @@ get_osmdata=function(key, value, shape_name,return=TRUE, save=FALSE, dir_name="d
     shape_name=as.character(substitute(shape_name))
   }
   bbox=sf::st_coordinates(shape)[,1:2]
+  if(pause>0){Sys.sleep(pause)}
   result=osmdata::opq(bbox = bbox, timeout=120)%>%
     osmdata::add_osm_feature(key = key,
                              value = value) %>% 

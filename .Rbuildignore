@@ -1,1 +1,4 @@
 ^dev$
+^.*\.Rproj$
+^\.Rproj\.user$
+^glosmurb\.Rproj$
