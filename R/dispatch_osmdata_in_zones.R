@@ -9,8 +9,8 @@ dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata
   osm_shape=sf::st_read(osm_shape_path,quiet=TRUE) %>%
     sf::st_make_valid()
   new_path=stringr::str_replace(osm_shape_path,
-                                glue::glue("/{from}/"),
-                                glue::glue("/{to}/"))
+                                glue::glue("{from}/"),
+                                glue::glue("{to}/"))
   if(file.exists(new_path)){return("Done")}
   sf::sf_use_s2(FALSE)
   intersect_shape=function(shape){
@@ -24,13 +24,15 @@ dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata
     return(result)
   }
   zones_shapes=zones_shape %>%
-    mutate(npol=1:n()) %>%
-    group_by(npol) %>%
+    group_by(reach,zone) %>%
     tidyr::nest() %>%
     dplyr::mutate(data=purrr::map(data,intersect_shape)) %>%
-    sf::st_drop_geometry()
+    sf::st_drop_geometry() %>%
+    dplyr::mutate(data=purrr::map2(data,reach,~dplyr::mutate(.x,reach=.y))) %>%
+    dplyr::mutate(data=purrr::map2(data,zone,~dplyr::mutate(.x,zone=.y)))
   #check how many lines there should be
   n=purrr::map_int(zones_shapes$data,nrow) %>% sum()
+  print(n)
   if(n==0){return("Done")}
   result=do.call(rbind,zones_shapes$data)
   directory=stringr::str_replace(new_path,"[^\\/]*\\.shp","")
@@ -38,4 +40,3 @@ dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata
   sf::st_write(result,dsn=new_path,quiet=TRUE)
   return("Done")
 }
-
