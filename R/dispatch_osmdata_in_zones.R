@@ -3,10 +3,8 @@
 #' @param zones_shape the shapes of zones in which to dispatch the osm elements (each OSM element will be associated to one or several zones)
 #' @param from the name of the directory containing the original osm data shapefiles
 #' @param to the name of the directory which will contain the resulting shapefiles
-#' @return
 #' @export
-#'
-#' @examples
+
 
 
 dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata",to="data/osmdata_trimmed"){

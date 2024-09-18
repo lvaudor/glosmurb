@@ -3,5 +3,7 @@
 export("%>%")
 export(add_to_map)
 export(base_map)
+export(dispatch_osmdata_in_zones)
+export(get_osmdata)
 export(save_osmdata)
 importFrom(magrittr,"%>%")
