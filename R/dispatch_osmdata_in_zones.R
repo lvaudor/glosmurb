@@ -5,8 +5,6 @@
 #' @param to the name of the directory which will contain the resulting shapefiles
 #' @export
 
-
-
 dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata",to="data/osmdata_trimmed"){
   osm_shape=sf::st_read(osm_shape_path,quiet=TRUE) %>%
     sf::st_make_valid()
@@ -15,7 +13,6 @@ dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata
                                 glue::glue("/{to}/"))
   if(file.exists(new_path)){return("Done")}
   sf::sf_use_s2(FALSE)
-  zones_shape
   intersect_shape=function(shape){
     intersects=sf::st_intersects(osm_shape,shape,sparse=FALSE)
     result=osm_shape %>%
@@ -32,6 +29,9 @@ dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata
     tidyr::nest() %>%
     dplyr::mutate(data=purrr::map(data,intersect_shape)) %>%
     sf::st_drop_geometry()
+  #check how many lines there should be
+  n=purrr::map_int(zones_shapes$data,nrow) %>% sum()
+  if(n==0){return("Done")}
   result=do.call(rbind,zones_shapes$data)
   directory=stringr::str_replace(new_path,"[^\\/]*\\.shp","")
   if(!dir.exists(directory)){dir.create(directory,recursive=TRUE)}
