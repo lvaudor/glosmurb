@@ -5,3 +5,4 @@
 .httr-oauth
 data/osmdata
 inst/doc
+data-raw
