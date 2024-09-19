@@ -24,7 +24,8 @@ dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata
     return(result)
   }
   zones_shapes=zones_shape %>%
-    group_by(reach,zone) %>%
+    dplyr::mutate(npol=1:dplyr::n()) %>%
+    dplyr::group_by(npol,reach, zone) %>%
     tidyr::nest() %>%
     dplyr::mutate(data=purrr::map(data,intersect_shape)) %>%
     sf::st_drop_geometry() %>%
