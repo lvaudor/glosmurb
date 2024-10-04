@@ -6,12 +6,13 @@
 #' @export
 
 dispatch_osmdata_in_zones=function(osm_shape_path,zones_shape,from="data/osmdata",to="data/osmdata_trimmed"){
-  osm_shape=sf::st_read(osm_shape_path,quiet=TRUE) %>%
-    sf::st_make_valid()
   new_path=stringr::str_replace(osm_shape_path,
                                 glue::glue("{from}/"),
                                 glue::glue("{to}/"))
   if(file.exists(new_path)){return("Done")}
+  osm_shape=sf::st_read(osm_shape_path,quiet=TRUE) %>%
+    sf::st_make_valid()
+
   sf::sf_use_s2(FALSE)
   intersect_shape=function(shape){
     intersects=sf::st_intersects(osm_shape,shape,sparse=FALSE)
